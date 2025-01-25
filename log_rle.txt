@@ -1,0 +1,835 @@
+nohup: ignoring input
+['/home/vladimirfrants9/RetinexMamba/basicsr', '/opt/conda/envs/RetinexMamba/lib/python38.zip', '/opt/conda/envs/RetinexMamba/lib/python3.8', '/opt/conda/envs/RetinexMamba/lib/python3.8/lib-dynload', '/opt/conda/envs/RetinexMamba/lib/python3.8/site-packages', '/home/vladimirfrants9/RetinexMamba', '/opt/conda/envs/RetinexMamba/lib/python3.8/site-packages/setuptools/_vendor']
+['/home/vladimirfrants9/RetinexMamba/basicsr', '/opt/conda/envs/RetinexMamba/lib/python38.zip', '/opt/conda/envs/RetinexMamba/lib/python3.8', '/opt/conda/envs/RetinexMamba/lib/python3.8/lib-dynload', '/opt/conda/envs/RetinexMamba/lib/python3.8/site-packages', '/home/vladimirfrants9/RetinexMamba', '/opt/conda/envs/RetinexMamba/lib/python3.8/site-packages/setuptools/_vendor']
+Disable distributed.
+iter (20250124_210212),psnr
+2025-01-24 21:02:12,568 INFO: 
+                ____                _       _____  ____
+               / __ ) ____ _ _____ (_)_____/ ___/ / __ \
+              / __  |/ __ `// ___// // ___/\__ \ / /_/ /
+             / /_/ // /_/ /(__  )/ // /__ ___/ // _, _/
+            /_____/ \__,_//____//_/ \___//____//_/ |_|
+     ______                   __   __                 __      __
+    / ____/____   ____   ____/ /  / /   __  __ _____ / /__   / /
+   / / __ / __ \ / __ \ / __  /  / /   / / / // ___// //_/  / /
+  / /_/ // /_/ // /_/ // /_/ /  / /___/ /_/ // /__ / /<    /_/
+  \____/ \____/ \____/ \____/  /_____/\____/ \___//_/|_|  (_)
+    
+Version Information: 
+	BasicSR: 1.2.0+4d2c23d
+	PyTorch: 1.13.0+cu117
+	TorchVision: 0.14.0+cu117
+2025-01-24 21:02:12,568 INFO: 
+  name: RetinexMamba_LOL_rle
+  model_type: ImageCleanModel
+  scale: 1
+  num_gpu: 1
+  manual_seed: 100
+  datasets:[
+    train:[
+      name: TrainSet
+      type: Dataset_PairedImage
+      dataroot_gt: data/rle/Train/target
+      dataroot_lq: data/rle/Train/input
+      geometric_augs: True
+      filename_tmpl: {}
+      io_backend:[
+        type: disk
+      ]
+      use_shuffle: True
+      num_worker_per_gpu: 8
+      batch_size_per_gpu: 8
+      mini_batch_sizes: [8]
+      iters: [300000]
+      gt_size: 128
+      gt_sizes: [128]
+      dataset_enlarge_ratio: 1
+      prefetch_mode: None
+      phase: train
+      scale: 1
+    ]
+    val:[
+      name: ValSet
+      type: Dataset_PairedImage
+      dataroot_gt: data/rle/Test/target
+      dataroot_lq: data/rle/Test/input
+      io_backend:[
+        type: disk
+      ]
+      phase: val
+      scale: 1
+    ]
+  ]
+  network_g:[
+    type: RetinexMamba
+    in_channels: 3
+    out_channels: 3
+    n_feat: 40
+    stage: 1
+    num_blocks: [1, 2, 2]
+  ]
+  path:[
+    pretrain_network_g: None
+    strict_load_g: True
+    resume_state: experiments/RetinexMamba_LOL_rle/training_states/16000.state
+    root: /home/vladimirfrants9/RetinexMamba
+    experiments_root: /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle
+    models: /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle/models
+    training_states: /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle/training_states
+    log: /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle
+    visualization: /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle/visualization
+  ]
+  train:[
+    total_iter: 150000
+    warmup_iter: -1
+    use_grad_clip: True
+    scheduler:[
+      type: CosineAnnealingRestartCyclicLR
+      periods: [46000, 104000]
+      restart_weights: [1, 1]
+      eta_mins: [0.0003, 1e-06]
+    ]
+    mixing_augs:[
+      mixup: True
+      mixup_beta: 1.2
+      use_identity: True
+    ]
+    optim_g:[
+      type: Adam
+      lr: 0.0002
+      betas: [0.9, 0.999]
+    ]
+    pixel_opt:[
+      type: L1Loss
+      loss_weight: 1
+      reduction: mean
+    ]
+  ]
+  val:[
+    window_size: 4
+    val_freq: 1000.0
+    save_img: False
+    rgb2bgr: True
+    use_image: False
+    max_minibatch: 8
+    metrics:[
+      psnr:[
+        type: calculate_psnr
+        crop_border: 0
+        test_y_channel: False
+      ]
+    ]
+  ]
+  logger:[
+    print_freq: 500
+    save_checkpoint_freq: 1000.0
+    use_tb_logger: True
+    wandb:[
+      project: low_light
+      resume_id: None
+    ]
+  ]
+  dist_params:[
+    backend: nccl
+    port: 29500
+  ]
+  is_train: True
+  dist: False
+  rank: 0
+  world_size: 1
+
+2025-01-24 21:02:13,068 INFO: Dataset Dataset_PairedImage - TrainSet is created.
+2025-01-24 21:02:13,069 INFO: Training statistics:
+	Number of train images: 946
+	Dataset enlarge ratio: 1
+	Batch size per gpu: 8
+	World size (gpu number): 1
+	Require iter number per epoch: 119
+	Total epochs: 1261; iters: 150000.
+2025-01-24 21:02:13,082 INFO: Dataset Dataset_PairedImage - ValSet is created.
+2025-01-24 21:02:13,082 INFO: Number of val images/folders in ValSet: 334
+2025-01-24 21:02:13,082 INFO: Set pretrain_network_g to /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle/models/net_g_16000.pth
+2025-01-24 21:02:13,373 INFO: Loading RetinexMamba model from /home/vladimirfrants9/RetinexMamba/experiments/RetinexMamba_LOL_rle/models/net_g_16000.pth.
+2025-01-24 21:02:13,573 INFO: Model [ImageCleanModel] is created.
+2025-01-24 21:02:13,626 INFO: Resuming training from epoch: 135, iter: 16000.
+2025-01-24 21:02:13,627 INFO: best psnr: 29.301435804651618 from iteration 14000
+Not using Automatic Mixed Precision
+ load net keys <built-in method keys of collections.OrderedDict object at 0x7f1a302192c0>
+<basicsr.models.image_restoration_model.ImageCleanModel object at 0x7f1a3021a3d0>
+2025-01-24 21:02:13,779 INFO: Start training from epoch: 135, iter: 16000
+2025-01-24 21:02:14,078 INFO: 
+ Updating Patch_Size to 128 and Batch_Size to 8 
+
+2025-01-24 21:06:00,074 INFO: [Retin..][epoch:139, iter:  16,500, lr:(2.285e-04,)] [eta: 16:45:40, time (data): 0.446 (0.002)] l_pix: 2.7603e-02 
+2025-01-24 21:09:43,342 INFO: [Retin..][epoch:143, iter:  17,000, lr:(2.301e-04,)] [eta: 16:35:51, time (data): 0.445 (0.002)] l_pix: 3.2207e-02 
+2025-01-24 21:09:43,343 INFO: Saving models and training states.
+2025-01-24 21:10:08,133 INFO: Validation ValSet,		 # psnr: 30.0340
+17000,30.033966287466654
+2025-01-24 21:13:51,533 INFO: [Retin..][epoch:147, iter:  17,500, lr:(2.317e-04,)] [eta: 17:06:46, time (data): 0.444 (0.002)] l_pix: 1.2922e-02 
+2025-01-24 21:17:35,064 INFO: [Retin..][epoch:151, iter:  18,000, lr:(2.333e-04,)] [eta: 16:53:03, time (data): 0.446 (0.002)] l_pix: 2.3703e-02 
+2025-01-24 21:17:35,065 INFO: Saving models and training states.
+2025-01-24 21:17:58,751 INFO: Validation ValSet,		 # psnr: 30.1909
+18000,30.190898723206917
+2025-01-24 21:21:42,522 INFO: [Retin..][epoch:156, iter:  18,500, lr:(2.349e-04,)] [eta: 17:04:18, time (data): 0.445 (0.001)] l_pix: 1.5328e-02 
+2025-01-24 21:25:25,963 INFO: [Retin..][epoch:160, iter:  19,000, lr:(2.365e-04,)] [eta: 16:52:57, time (data): 0.446 (0.001)] l_pix: 1.5341e-02 
+2025-01-24 21:25:25,964 INFO: Saving models and training states.
+2025-01-24 21:25:49,591 INFO: Validation ValSet,		 # psnr: 30.3622
+19000,30.362196894538354
+2025-01-24 21:29:33,199 INFO: [Retin..][epoch:164, iter:  19,500, lr:(2.382e-04,)] [eta: 16:58:34, time (data): 0.444 (0.002)] l_pix: 1.9642e-02 
+2025-01-24 21:33:16,748 INFO: [Retin..][epoch:168, iter:  20,000, lr:(2.398e-04,)] [eta: 16:48:55, time (data): 0.444 (0.002)] l_pix: 1.7329e-02 
+2025-01-24 21:33:16,749 INFO: Saving models and training states.
+2025-01-24 21:33:40,517 INFO: Validation ValSet,		 # psnr: 30.5777
+20000,30.57769462674165
+2025-01-24 21:37:24,546 INFO: [Retin..][epoch:173, iter:  20,500, lr:(2.415e-04,)] [eta: 16:52:13, time (data): 0.443 (0.000)] l_pix: 2.2977e-02 
+2025-01-24 21:41:08,158 INFO: [Retin..][epoch:177, iter:  21,000, lr:(2.432e-04,)] [eta: 16:43:38, time (data): 0.445 (0.002)] l_pix: 1.5035e-02 
+2025-01-24 21:41:08,159 INFO: Saving models and training states.
+2025-01-24 21:41:31,847 INFO: Validation ValSet,		 # psnr: 30.9423
+21000,30.942272227120924
+2025-01-24 21:45:15,460 INFO: [Retin..][epoch:181, iter:  21,500, lr:(2.449e-04,)] [eta: 16:45:09, time (data): 0.445 (0.002)] l_pix: 2.1524e-02 
+2025-01-24 21:48:58,903 INFO: [Retin..][epoch:185, iter:  22,000, lr:(2.466e-04,)] [eta: 16:37:15, time (data): 0.444 (0.002)] l_pix: 1.9072e-02 
+2025-01-24 21:48:58,904 INFO: Saving models and training states.
+2025-01-24 21:49:22,604 INFO: Validation ValSet,		 # psnr: 30.1635
+22000,30.163515269512462
+2025-01-24 21:53:06,392 INFO: [Retin..][epoch:190, iter:  22,500, lr:(2.483e-04,)] [eta: 16:37:51, time (data): 0.443 (0.000)] l_pix: 1.2650e-02 
+2025-01-24 21:56:49,792 INFO: [Retin..][epoch:194, iter:  23,000, lr:(2.500e-04,)] [eta: 16:30:30, time (data): 0.444 (0.002)] l_pix: 2.2410e-02 
+2025-01-24 21:56:49,793 INFO: Saving models and training states.
+2025-01-24 21:57:13,528 INFO: Validation ValSet,		 # psnr: 31.2663
+23000,31.266253098980176
+2025-01-24 22:00:57,050 INFO: [Retin..][epoch:198, iter:  23,500, lr:(2.517e-04,)] [eta: 16:30:20, time (data): 0.445 (0.002)] l_pix: 1.6722e-02 
+2025-01-24 22:04:40,561 INFO: [Retin..][epoch:202, iter:  24,000, lr:(2.534e-04,)] [eta: 16:23:26, time (data): 0.444 (0.002)] l_pix: 1.2437e-02 
+2025-01-24 22:04:40,562 INFO: Saving models and training states.
+2025-01-24 22:05:04,112 INFO: Validation ValSet,		 # psnr: 30.4316
+24000,30.431616514506825
+2025-01-24 22:08:47,947 INFO: [Retin..][epoch:207, iter:  24,500, lr:(2.551e-04,)] [eta: 16:22:47, time (data): 0.458 (0.000)] l_pix: 1.6629e-02 
+2025-01-24 22:12:31,469 INFO: [Retin..][epoch:211, iter:  25,000, lr:(2.568e-04,)] [eta: 16:16:14, time (data): 0.444 (0.002)] l_pix: 1.0714e-02 
+2025-01-24 22:12:31,471 INFO: Saving models and training states.
+2025-01-24 22:12:55,171 INFO: Validation ValSet,		 # psnr: 30.4268
+25000,30.42683535549664
+2025-01-24 22:16:38,846 INFO: [Retin..][epoch:215, iter:  25,500, lr:(2.585e-04,)] [eta: 16:15:11, time (data): 0.445 (0.002)] l_pix: 1.9275e-02 
+2025-01-24 22:20:22,310 INFO: [Retin..][epoch:219, iter:  26,000, lr:(2.602e-04,)] [eta: 16:08:53, time (data): 0.444 (0.002)] l_pix: 1.1797e-02 
+2025-01-24 22:20:22,311 INFO: Saving models and training states.
+2025-01-24 22:20:45,888 INFO: Validation ValSet,		 # psnr: 30.9962
+26000,30.99624903330208
+2025-01-24 22:24:29,271 INFO: [Retin..][epoch:223, iter:  26,500, lr:(2.618e-04,)] [eta: 16:07:26, time (data): 0.444 (0.002)] l_pix: 2.5656e-02 
+2025-01-24 22:28:13,088 INFO: [Retin..][epoch:228, iter:  27,000, lr:(2.635e-04,)] [eta: 16:01:26, time (data): 0.444 (0.002)] l_pix: 1.3932e-02 
+2025-01-24 22:28:13,089 INFO: Saving models and training states.
+2025-01-24 22:28:36,685 INFO: Validation ValSet,		 # psnr: 30.9319
+27000,30.931908396367074
+2025-01-24 22:32:20,175 INFO: [Retin..][epoch:232, iter:  27,500, lr:(2.651e-04,)] [eta: 15:59:46, time (data): 0.443 (0.002)] l_pix: 2.5547e-02 
+2025-01-24 22:36:03,592 INFO: [Retin..][epoch:236, iter:  28,000, lr:(2.667e-04,)] [eta: 15:53:52, time (data): 0.445 (0.002)] l_pix: 2.5193e-02 
+2025-01-24 22:36:03,593 INFO: Saving models and training states.
+2025-01-24 22:36:27,040 INFO: Validation ValSet,		 # psnr: 29.8566
+28000,29.856597318081224
+2025-01-24 22:40:10,464 INFO: [Retin..][epoch:240, iter:  28,500, lr:(2.683e-04,)] [eta: 15:51:57, time (data): 0.443 (0.002)] l_pix: 1.3339e-02 
+2025-01-24 22:43:54,157 INFO: [Retin..][epoch:245, iter:  29,000, lr:(2.699e-04,)] [eta: 15:46:17, time (data): 0.444 (0.002)] l_pix: 2.1666e-02 
+2025-01-24 22:43:54,158 INFO: Saving models and training states.
+2025-01-24 22:44:17,816 INFO: Validation ValSet,		 # psnr: 32.0029
+29000,32.00289704791226
+2025-01-24 22:48:01,219 INFO: [Retin..][epoch:249, iter:  29,500, lr:(2.715e-04,)] [eta: 15:44:13, time (data): 0.444 (0.002)] l_pix: 1.8007e-02 
+2025-01-24 22:51:44,543 INFO: [Retin..][epoch:253, iter:  30,000, lr:(2.730e-04,)] [eta: 15:38:37, time (data): 0.443 (0.002)] l_pix: 1.2058e-02 
+2025-01-24 22:51:44,544 INFO: Saving models and training states.
+2025-01-24 22:52:07,893 INFO: Validation ValSet,		 # psnr: 30.5963
+30000,30.59628442382457
+2025-01-24 22:55:50,868 INFO: [Retin..][epoch:257, iter:  30,500, lr:(2.745e-04,)] [eta: 15:36:19, time (data): 0.445 (0.002)] l_pix: 2.2807e-02 
+2025-01-24 22:59:34,469 INFO: [Retin..][epoch:262, iter:  31,000, lr:(2.760e-04,)] [eta: 15:30:53, time (data): 0.443 (0.000)] l_pix: 1.3938e-02 
+2025-01-24 22:59:34,470 INFO: Saving models and training states.
+2025-01-24 22:59:58,076 INFO: Validation ValSet,		 # psnr: 31.3643
+31000,31.364344377332937
+2025-01-24 23:03:41,585 INFO: [Retin..][epoch:266, iter:  31,500, lr:(2.774e-04,)] [eta: 15:28:33, time (data): 0.444 (0.002)] l_pix: 1.9525e-02 
+2025-01-24 23:07:24,853 INFO: [Retin..][epoch:270, iter:  32,000, lr:(2.788e-04,)] [eta: 15:23:11, time (data): 0.444 (0.002)] l_pix: 2.8030e-02 
+2025-01-24 23:07:24,853 INFO: Saving models and training states.
+2025-01-24 23:07:48,243 INFO: Validation ValSet,		 # psnr: 31.5624
+32000,31.56238169256836
+2025-01-24 23:11:31,211 INFO: [Retin..][epoch:274, iter:  32,500, lr:(2.802e-04,)] [eta: 15:20:39, time (data): 0.444 (0.002)] l_pix: 1.9394e-02 
+2025-01-24 23:15:14,386 INFO: [Retin..][epoch:279, iter:  33,000, lr:(2.816e-04,)] [eta: 15:15:22, time (data): 0.442 (0.000)] l_pix: 2.5852e-02 
+2025-01-24 23:15:14,387 INFO: Saving models and training states.
+2025-01-24 23:15:37,696 INFO: Validation ValSet,		 # psnr: 31.3891
+33000,31.389061529019582
+2025-01-24 23:19:20,868 INFO: [Retin..][epoch:283, iter:  33,500, lr:(2.829e-04,)] [eta: 15:12:46, time (data): 0.444 (0.002)] l_pix: 1.9555e-02 
+2025-01-24 23:23:04,016 INFO: [Retin..][epoch:287, iter:  34,000, lr:(2.841e-04,)] [eta: 15:07:34, time (data): 0.444 (0.002)] l_pix: 1.8860e-02 
+2025-01-24 23:23:04,017 INFO: Saving models and training states.
+2025-01-24 23:23:27,359 INFO: Validation ValSet,		 # psnr: 31.8011
+34000,31.801070856044042
+2025-01-24 23:27:10,341 INFO: [Retin..][epoch:291, iter:  34,500, lr:(2.854e-04,)] [eta: 15:04:52, time (data): 0.444 (0.002)] l_pix: 1.7567e-02 
+2025-01-24 23:30:53,555 INFO: [Retin..][epoch:296, iter:  35,000, lr:(2.865e-04,)] [eta: 14:59:45, time (data): 0.444 (0.002)] l_pix: 1.7411e-02 
+2025-01-24 23:30:53,556 INFO: Saving models and training states.
+2025-01-24 23:31:16,894 INFO: Validation ValSet,		 # psnr: 29.6194
+35000,29.61944151396282
+2025-01-24 23:34:59,898 INFO: [Retin..][epoch:300, iter:  35,500, lr:(2.877e-04,)] [eta: 14:56:59, time (data): 0.444 (0.001)] l_pix: 1.5515e-02 
+2025-01-24 23:38:42,847 INFO: [Retin..][epoch:304, iter:  36,000, lr:(2.888e-04,)] [eta: 14:51:55, time (data): 0.444 (0.002)] l_pix: 1.1206e-02 
+2025-01-24 23:38:42,848 INFO: Saving models and training states.
+2025-01-24 23:39:06,149 INFO: Validation ValSet,		 # psnr: 31.6269
+36000,31.62686162721427
+2025-01-24 23:42:49,220 INFO: [Retin..][epoch:308, iter:  36,500, lr:(2.898e-04,)] [eta: 14:49:05, time (data): 0.445 (0.002)] l_pix: 1.6337e-02 
+2025-01-24 23:46:32,538 INFO: [Retin..][epoch:312, iter:  37,000, lr:(2.908e-04,)] [eta: 14:44:07, time (data): 0.445 (0.002)] l_pix: 1.6624e-02 
+2025-01-24 23:46:32,539 INFO: Saving models and training states.
+2025-01-24 23:46:56,119 INFO: Validation ValSet,		 # psnr: 30.2473
+37000,30.24729934541044
+2025-01-24 23:50:39,767 INFO: [Retin..][epoch:317, iter:  37,500, lr:(2.918e-04,)] [eta: 14:41:18, time (data): 0.444 (0.001)] l_pix: 1.7830e-02 
+2025-01-24 23:54:23,160 INFO: [Retin..][epoch:321, iter:  38,000, lr:(2.927e-04,)] [eta: 14:36:23, time (data): 0.444 (0.002)] l_pix: 1.2073e-02 
+2025-01-24 23:54:23,161 INFO: Saving models and training states.
+2025-01-24 23:54:46,493 INFO: Validation ValSet,		 # psnr: 31.3842
+38000,31.384222284910802
+2025-01-24 23:58:29,617 INFO: [Retin..][epoch:325, iter:  38,500, lr:(2.936e-04,)] [eta: 14:33:27, time (data): 0.444 (0.002)] l_pix: 2.0169e-02 
+2025-01-25 00:02:13,209 INFO: [Retin..][epoch:329, iter:  39,000, lr:(2.944e-04,)] [eta: 14:28:36, time (data): 0.445 (0.002)] l_pix: 1.4585e-02 
+2025-01-25 00:02:13,210 INFO: Saving models and training states.
+2025-01-25 00:02:36,641 INFO: Validation ValSet,		 # psnr: 30.6119
+39000,30.61185561810668
+2025-01-25 00:06:20,049 INFO: [Retin..][epoch:334, iter:  39,500, lr:(2.952e-04,)] [eta: 14:25:39, time (data): 0.444 (0.002)] l_pix: 2.4156e-02 
+2025-01-25 00:10:02,967 INFO: [Retin..][epoch:338, iter:  40,000, lr:(2.959e-04,)] [eta: 14:20:48, time (data): 0.444 (0.002)] l_pix: 1.1771e-02 
+2025-01-25 00:10:02,968 INFO: Saving models and training states.
+2025-01-25 00:10:26,332 INFO: Validation ValSet,		 # psnr: 31.6378
+40000,31.637773207682738
+2025-01-25 00:14:09,357 INFO: [Retin..][epoch:342, iter:  40,500, lr:(2.965e-04,)] [eta: 14:17:45, time (data): 0.443 (0.002)] l_pix: 1.2923e-02 
+2025-01-25 00:17:52,654 INFO: [Retin..][epoch:346, iter:  41,000, lr:(2.971e-04,)] [eta: 14:12:59, time (data): 0.444 (0.001)] l_pix: 1.1693e-02 
+2025-01-25 00:17:52,655 INFO: Saving models and training states.
+2025-01-25 00:18:16,001 INFO: Validation ValSet,		 # psnr: 31.7737
+41000,31.77367887185046
+2025-01-25 00:21:59,498 INFO: [Retin..][epoch:351, iter:  41,500, lr:(2.977e-04,)] [eta: 14:09:56, time (data): 0.448 (0.004)] l_pix: 2.1242e-02 
+2025-01-25 00:25:42,625 INFO: [Retin..][epoch:355, iter:  42,000, lr:(2.981e-04,)] [eta: 14:05:11, time (data): 0.444 (0.002)] l_pix: 1.3223e-02 
+2025-01-25 00:25:42,626 INFO: Saving models and training states.
+2025-01-25 00:26:05,956 INFO: Validation ValSet,		 # psnr: 31.5066
+42000,31.506600083304505
+2025-01-25 00:29:49,586 INFO: [Retin..][epoch:359, iter:  42,500, lr:(2.986e-04,)] [eta: 14:02:06, time (data): 0.444 (0.001)] l_pix: 1.1218e-02 
+2025-01-25 00:33:32,767 INFO: [Retin..][epoch:363, iter:  43,000, lr:(2.990e-04,)] [eta: 13:57:24, time (data): 0.445 (0.001)] l_pix: 1.8009e-02 
+2025-01-25 00:33:32,767 INFO: Saving models and training states.
+2025-01-25 00:33:56,140 INFO: Validation ValSet,		 # psnr: 32.1011
+43000,32.101072435705525
+2025-01-25 00:37:39,756 INFO: [Retin..][epoch:368, iter:  43,500, lr:(2.993e-04,)] [eta: 13:54:17, time (data): 0.443 (0.000)] l_pix: 1.2808e-02 
+2025-01-25 00:41:23,277 INFO: [Retin..][epoch:372, iter:  44,000, lr:(2.995e-04,)] [eta: 13:49:38, time (data): 0.443 (0.001)] l_pix: 1.2365e-02 
+2025-01-25 00:41:23,278 INFO: Saving models and training states.
+2025-01-25 00:41:46,566 INFO: Validation ValSet,		 # psnr: 31.8427
+44000,31.842706707372734
+2025-01-25 00:45:30,355 INFO: [Retin..][epoch:376, iter:  44,500, lr:(2.997e-04,)] [eta: 13:46:29, time (data): 0.444 (0.002)] l_pix: 1.2140e-02 
+2025-01-25 00:49:13,609 INFO: [Retin..][epoch:380, iter:  45,000, lr:(2.999e-04,)] [eta: 13:41:51, time (data): 0.443 (0.001)] l_pix: 1.5018e-02 
+2025-01-25 00:49:13,610 INFO: Saving models and training states.
+2025-01-25 00:49:36,921 INFO: Validation ValSet,		 # psnr: 32.5103
+45000,32.51028344723451
+2025-01-25 00:53:20,318 INFO: [Retin..][epoch:384, iter:  45,500, lr:(3.000e-04,)] [eta: 13:38:38, time (data): 0.444 (0.002)] l_pix: 1.6563e-02 
+2025-01-25 00:57:03,837 INFO: [Retin..][epoch:389, iter:  46,000, lr:(3.000e-04,)] [eta: 13:34:03, time (data): 0.444 (0.002)] l_pix: 1.1605e-02 
+2025-01-25 00:57:03,838 INFO: Saving models and training states.
+2025-01-25 00:57:27,140 INFO: Validation ValSet,		 # psnr: 32.2108
+46000,32.21081861171981
+2025-01-25 01:01:10,401 INFO: [Retin..][epoch:393, iter:  46,500, lr:(2.000e-04,)] [eta: 13:30:48, time (data): 0.445 (0.002)] l_pix: 1.4888e-02 
+2025-01-25 01:04:53,831 INFO: [Retin..][epoch:397, iter:  47,000, lr:(2.000e-04,)] [eta: 13:26:15, time (data): 0.452 (0.002)] l_pix: 1.1300e-02 
+2025-01-25 01:04:53,832 INFO: Saving models and training states.
+2025-01-25 01:05:17,138 INFO: Validation ValSet,		 # psnr: 32.4978
+47000,32.49777336301668
+2025-01-25 01:09:00,488 INFO: [Retin..][epoch:401, iter:  47,500, lr:(1.999e-04,)] [eta: 13:22:59, time (data): 0.444 (0.002)] l_pix: 1.1928e-02 
+2025-01-25 01:12:44,093 INFO: [Retin..][epoch:406, iter:  48,000, lr:(1.998e-04,)] [eta: 13:18:27, time (data): 0.450 (0.002)] l_pix: 1.9537e-02 
+2025-01-25 01:12:44,094 INFO: Saving models and training states.
+2025-01-25 01:13:07,446 INFO: Validation ValSet,		 # psnr: 31.7521
+48000,31.7521008244983
+2025-01-25 01:16:50,709 INFO: [Retin..][epoch:410, iter:  48,500, lr:(1.997e-04,)] [eta: 13:15:09, time (data): 0.444 (0.002)] l_pix: 1.3247e-02 
+2025-01-25 01:20:34,113 INFO: [Retin..][epoch:414, iter:  49,000, lr:(1.996e-04,)] [eta: 13:10:38, time (data): 0.459 (0.002)] l_pix: 1.0715e-02 
+2025-01-25 01:20:34,114 INFO: Saving models and training states.
+2025-01-25 01:20:57,461 INFO: Validation ValSet,		 # psnr: 32.4512
+49000,32.45121805840421
+2025-01-25 01:24:40,876 INFO: [Retin..][epoch:418, iter:  49,500, lr:(1.994e-04,)] [eta: 13:07:19, time (data): 0.449 (0.002)] l_pix: 2.2347e-02 
+2025-01-25 01:28:24,661 INFO: [Retin..][epoch:423, iter:  50,000, lr:(1.993e-04,)] [eta: 13:02:51, time (data): 0.445 (0.002)] l_pix: 2.1712e-02 
+2025-01-25 01:28:24,662 INFO: Saving models and training states.
+2025-01-25 01:28:47,975 INFO: Validation ValSet,		 # psnr: 32.5157
+50000,32.515677782350544
+2025-01-25 01:32:31,600 INFO: [Retin..][epoch:427, iter:  50,500, lr:(1.991e-04,)] [eta: 12:59:31, time (data): 0.444 (0.002)] l_pix: 1.2714e-02 
+2025-01-25 01:36:14,871 INFO: [Retin..][epoch:431, iter:  51,000, lr:(1.989e-04,)] [eta: 12:55:03, time (data): 0.444 (0.002)] l_pix: 2.3485e-02 
+2025-01-25 01:36:14,872 INFO: Saving models and training states.
+2025-01-25 01:36:38,209 INFO: Validation ValSet,		 # psnr: 32.5070
+51000,32.50704547393946
+2025-01-25 01:40:21,714 INFO: [Retin..][epoch:435, iter:  51,500, lr:(1.986e-04,)] [eta: 12:51:41, time (data): 0.444 (0.002)] l_pix: 1.0767e-02 
+2025-01-25 01:44:05,371 INFO: [Retin..][epoch:440, iter:  52,000, lr:(1.984e-04,)] [eta: 12:47:15, time (data): 0.450 (0.000)] l_pix: 2.7652e-02 
+2025-01-25 01:44:05,372 INFO: Saving models and training states.
+2025-01-25 01:44:28,690 INFO: Validation ValSet,		 # psnr: 31.4459
+52000,31.445884042322707
+2025-01-25 01:48:11,989 INFO: [Retin..][epoch:444, iter:  52,500, lr:(1.981e-04,)] [eta: 12:43:52, time (data): 0.448 (0.002)] l_pix: 1.7556e-02 
+2025-01-25 01:51:55,412 INFO: [Retin..][epoch:448, iter:  53,000, lr:(1.978e-04,)] [eta: 12:39:26, time (data): 0.444 (0.002)] l_pix: 1.8247e-02 
+2025-01-25 01:51:55,413 INFO: Saving models and training states.
+2025-01-25 01:52:18,771 INFO: Validation ValSet,		 # psnr: 33.5100
+53000,33.51000732020584
+2025-01-25 01:56:02,174 INFO: [Retin..][epoch:452, iter:  53,500, lr:(1.975e-04,)] [eta: 12:36:02, time (data): 0.445 (0.002)] l_pix: 1.6892e-02 
+2025-01-25 01:59:45,897 INFO: [Retin..][epoch:457, iter:  54,000, lr:(1.971e-04,)] [eta: 12:31:38, time (data): 0.442 (0.000)] l_pix: 1.4368e-02 
+2025-01-25 01:59:45,898 INFO: Saving models and training states.
+2025-01-25 02:00:09,257 INFO: Validation ValSet,		 # psnr: 32.0665
+54000,32.06648977950564
+2025-01-25 02:03:52,627 INFO: [Retin..][epoch:461, iter:  54,500, lr:(1.967e-04,)] [eta: 12:28:13, time (data): 0.444 (0.002)] l_pix: 2.3872e-02 
+2025-01-25 02:07:35,967 INFO: [Retin..][epoch:465, iter:  55,000, lr:(1.963e-04,)] [eta: 12:23:49, time (data): 0.443 (0.002)] l_pix: 1.0551e-02 
+2025-01-25 02:07:35,968 INFO: Saving models and training states.
+2025-01-25 02:07:59,227 INFO: Validation ValSet,		 # psnr: 32.5928
+55000,32.59281402898494
+2025-01-25 02:11:42,449 INFO: [Retin..][epoch:469, iter:  55,500, lr:(1.959e-04,)] [eta: 12:20:22, time (data): 0.443 (0.001)] l_pix: 1.2468e-02 
+2025-01-25 02:15:25,861 INFO: [Retin..][epoch:473, iter:  56,000, lr:(1.955e-04,)] [eta: 12:16:00, time (data): 0.443 (0.001)] l_pix: 1.8574e-02 
+2025-01-25 02:15:25,862 INFO: Saving models and training states.
+2025-01-25 02:15:49,144 INFO: Validation ValSet,		 # psnr: 32.7886
+56000,32.78857885306491
+2025-01-25 02:19:32,631 INFO: [Retin..][epoch:478, iter:  56,500, lr:(1.950e-04,)] [eta: 12:12:32, time (data): 0.444 (0.002)] l_pix: 1.4614e-02 
+2025-01-25 02:23:15,871 INFO: [Retin..][epoch:482, iter:  57,000, lr:(1.946e-04,)] [eta: 12:08:10, time (data): 0.444 (0.002)] l_pix: 1.0532e-02 
+2025-01-25 02:23:15,872 INFO: Saving models and training states.
+2025-01-25 02:23:39,373 INFO: Validation ValSet,		 # psnr: 32.8728
+57000,32.872804718264724
+2025-01-25 02:27:22,698 INFO: [Retin..][epoch:486, iter:  57,500, lr:(1.941e-04,)] [eta: 12:04:42, time (data): 0.443 (0.002)] l_pix: 2.2831e-02 
+2025-01-25 02:31:05,888 INFO: [Retin..][epoch:490, iter:  58,000, lr:(1.935e-04,)] [eta: 12:00:21, time (data): 0.443 (0.002)] l_pix: 1.2806e-02 
+2025-01-25 02:31:05,888 INFO: Saving models and training states.
+2025-01-25 02:31:29,341 INFO: Validation ValSet,		 # psnr: 31.9532
+58000,31.953180007444264
+2025-01-25 02:35:13,075 INFO: [Retin..][epoch:495, iter:  58,500, lr:(1.930e-04,)] [eta: 11:56:53, time (data): 0.443 (0.001)] l_pix: 1.3467e-02 
+2025-01-25 02:38:56,424 INFO: [Retin..][epoch:499, iter:  59,000, lr:(1.924e-04,)] [eta: 11:52:33, time (data): 0.446 (0.002)] l_pix: 1.0271e-02 
+2025-01-25 02:38:56,425 INFO: Saving models and training states.
+2025-01-25 02:39:19,770 INFO: Validation ValSet,		 # psnr: 32.5256
+59000,32.52555330237168
+2025-01-25 02:43:03,057 INFO: [Retin..][epoch:503, iter:  59,500, lr:(1.918e-04,)] [eta: 11:49:02, time (data): 0.460 (0.002)] l_pix: 1.4365e-02 
+2025-01-25 02:46:46,397 INFO: [Retin..][epoch:507, iter:  60,000, lr:(1.912e-04,)] [eta: 11:44:43, time (data): 0.444 (0.002)] l_pix: 1.0630e-02 
+2025-01-25 02:46:46,398 INFO: Saving models and training states.
+2025-01-25 02:47:09,852 INFO: Validation ValSet,		 # psnr: 32.4314
+60000,32.431397629483286
+2025-01-25 02:50:53,436 INFO: [Retin..][epoch:512, iter:  60,500, lr:(1.906e-04,)] [eta: 11:41:13, time (data): 0.458 (0.002)] l_pix: 1.0183e-02 
+2025-01-25 02:54:36,701 INFO: [Retin..][epoch:516, iter:  61,000, lr:(1.900e-04,)] [eta: 11:36:54, time (data): 0.444 (0.002)] l_pix: 1.8631e-02 
+2025-01-25 02:54:36,702 INFO: Saving models and training states.
+2025-01-25 02:55:00,144 INFO: Validation ValSet,		 # psnr: 32.1161
+61000,32.11610849198553
+2025-01-25 02:58:43,516 INFO: [Retin..][epoch:520, iter:  61,500, lr:(1.893e-04,)] [eta: 11:33:23, time (data): 0.444 (0.002)] l_pix: 1.5536e-02 
+2025-01-25 03:02:26,943 INFO: [Retin..][epoch:524, iter:  62,000, lr:(1.886e-04,)] [eta: 11:29:05, time (data): 0.444 (0.002)] l_pix: 1.9428e-02 
+2025-01-25 03:02:26,944 INFO: Saving models and training states.
+2025-01-25 03:02:50,246 INFO: Validation ValSet,		 # psnr: 30.7149
+62000,30.714874797556668
+2025-01-25 03:06:33,903 INFO: [Retin..][epoch:529, iter:  62,500, lr:(1.879e-04,)] [eta: 11:25:33, time (data): 0.443 (0.000)] l_pix: 2.1530e-02 
+2025-01-25 03:10:17,380 INFO: [Retin..][epoch:533, iter:  63,000, lr:(1.872e-04,)] [eta: 11:21:17, time (data): 0.444 (0.001)] l_pix: 1.4285e-02 
+2025-01-25 03:10:17,381 INFO: Saving models and training states.
+2025-01-25 03:10:40,672 INFO: Validation ValSet,		 # psnr: 31.6431
+63000,31.643147847463617
+2025-01-25 03:14:23,856 INFO: [Retin..][epoch:537, iter:  63,500, lr:(1.864e-04,)] [eta: 11:17:43, time (data): 0.444 (0.002)] l_pix: 1.8874e-02 
+2025-01-25 03:18:07,254 INFO: [Retin..][epoch:541, iter:  64,000, lr:(1.857e-04,)] [eta: 11:13:27, time (data): 0.444 (0.002)] l_pix: 1.8149e-02 
+2025-01-25 03:18:07,255 INFO: Saving models and training states.
+2025-01-25 03:18:30,887 INFO: Validation ValSet,		 # psnr: 32.6999
+64000,32.69986134880246
+2025-01-25 03:22:14,504 INFO: [Retin..][epoch:546, iter:  64,500, lr:(1.849e-04,)] [eta: 11:09:54, time (data): 0.449 (0.006)] l_pix: 1.6505e-02 
+2025-01-25 03:25:57,769 INFO: [Retin..][epoch:550, iter:  65,000, lr:(1.841e-04,)] [eta: 11:05:38, time (data): 0.444 (0.002)] l_pix: 1.0637e-02 
+2025-01-25 03:25:57,770 INFO: Saving models and training states.
+2025-01-25 03:26:21,164 INFO: Validation ValSet,		 # psnr: 32.7595
+65000,32.759489625941164
+2025-01-25 03:30:04,453 INFO: [Retin..][epoch:554, iter:  65,500, lr:(1.832e-04,)] [eta: 11:02:03, time (data): 0.444 (0.002)] l_pix: 9.7211e-03 
+2025-01-25 03:33:48,004 INFO: [Retin..][epoch:558, iter:  66,000, lr:(1.824e-04,)] [eta: 10:57:49, time (data): 0.446 (0.002)] l_pix: 1.8195e-02 
+2025-01-25 03:33:48,005 INFO: Saving models and training states.
+2025-01-25 03:34:11,423 INFO: Validation ValSet,		 # psnr: 32.4615
+66000,32.461485197306374
+2025-01-25 03:37:54,843 INFO: [Retin..][epoch:562, iter:  66,500, lr:(1.815e-04,)] [eta: 10:54:14, time (data): 0.446 (0.002)] l_pix: 1.9845e-02 
+2025-01-25 03:41:38,485 INFO: [Retin..][epoch:567, iter:  67,000, lr:(1.806e-04,)] [eta: 10:50:00, time (data): 0.446 (0.002)] l_pix: 1.0379e-02 
+2025-01-25 03:41:38,485 INFO: Saving models and training states.
+2025-01-25 03:42:01,886 INFO: Validation ValSet,		 # psnr: 31.8747
+67000,31.874664360206687
+2025-01-25 03:45:45,177 INFO: [Retin..][epoch:571, iter:  67,500, lr:(1.797e-04,)] [eta: 10:46:24, time (data): 0.444 (0.002)] l_pix: 1.4636e-02 
+2025-01-25 03:49:28,632 INFO: [Retin..][epoch:575, iter:  68,000, lr:(1.788e-04,)] [eta: 10:42:10, time (data): 0.444 (0.002)] l_pix: 1.0978e-02 
+2025-01-25 03:49:28,633 INFO: Saving models and training states.
+2025-01-25 03:49:52,031 INFO: Validation ValSet,		 # psnr: 32.2742
+68000,32.27419840348482
+2025-01-25 03:53:35,319 INFO: [Retin..][epoch:579, iter:  68,500, lr:(1.779e-04,)] [eta: 10:38:34, time (data): 0.444 (0.002)] l_pix: 1.0588e-02 
+2025-01-25 03:57:18,897 INFO: [Retin..][epoch:584, iter:  69,000, lr:(1.769e-04,)] [eta: 10:34:21, time (data): 0.444 (0.002)] l_pix: 1.1445e-02 
+2025-01-25 03:57:18,898 INFO: Saving models and training states.
+2025-01-25 03:57:42,267 INFO: Validation ValSet,		 # psnr: 32.4404
+69000,32.440366077786535
+2025-01-25 04:01:25,578 INFO: [Retin..][epoch:588, iter:  69,500, lr:(1.760e-04,)] [eta: 10:30:44, time (data): 0.444 (0.002)] l_pix: 2.1793e-02 
+2025-01-25 04:05:08,719 INFO: [Retin..][epoch:592, iter:  70,000, lr:(1.750e-04,)] [eta: 10:26:31, time (data): 0.444 (0.002)] l_pix: 1.2370e-02 
+2025-01-25 04:05:08,720 INFO: Saving models and training states.
+2025-01-25 04:05:32,145 INFO: Validation ValSet,		 # psnr: 32.7011
+70000,32.70114064424509
+2025-01-25 04:09:15,431 INFO: [Retin..][epoch:596, iter:  70,500, lr:(1.740e-04,)] [eta: 10:22:53, time (data): 0.444 (0.002)] l_pix: 2.2897e-02 
+2025-01-25 04:12:58,916 INFO: [Retin..][epoch:601, iter:  71,000, lr:(1.730e-04,)] [eta: 10:18:42, time (data): 0.442 (0.000)] l_pix: 1.8962e-02 
+2025-01-25 04:12:58,917 INFO: Saving models and training states.
+2025-01-25 04:13:22,256 INFO: Validation ValSet,		 # psnr: 33.1328
+71000,33.13279222170706
+2025-01-25 04:17:05,470 INFO: [Retin..][epoch:605, iter:  71,500, lr:(1.719e-04,)] [eta: 10:15:03, time (data): 0.444 (0.002)] l_pix: 1.0122e-02 
+2025-01-25 04:20:48,710 INFO: [Retin..][epoch:609, iter:  72,000, lr:(1.709e-04,)] [eta: 10:10:52, time (data): 0.444 (0.002)] l_pix: 1.5992e-02 
+2025-01-25 04:20:48,711 INFO: Saving models and training states.
+2025-01-25 04:21:12,107 INFO: Validation ValSet,		 # psnr: 33.8699
+72000,33.86987106315762
+2025-01-25 04:24:55,491 INFO: [Retin..][epoch:613, iter:  72,500, lr:(1.698e-04,)] [eta: 10:07:13, time (data): 0.444 (0.002)] l_pix: 1.6269e-02 
+2025-01-25 04:28:38,905 INFO: [Retin..][epoch:618, iter:  73,000, lr:(1.687e-04,)] [eta: 10:03:02, time (data): 0.443 (0.000)] l_pix: 1.0900e-02 
+2025-01-25 04:28:38,906 INFO: Saving models and training states.
+2025-01-25 04:29:02,279 INFO: Validation ValSet,		 # psnr: 32.8379
+73000,32.83787059055798
+2025-01-25 04:32:45,615 INFO: [Retin..][epoch:622, iter:  73,500, lr:(1.676e-04,)] [eta: 9:59:23, time (data): 0.444 (0.002)] l_pix: 1.1212e-02 
+2025-01-25 04:36:28,940 INFO: [Retin..][epoch:626, iter:  74,000, lr:(1.665e-04,)] [eta: 9:55:12, time (data): 0.444 (0.002)] l_pix: 1.1262e-02 
+2025-01-25 04:36:28,941 INFO: Saving models and training states.
+2025-01-25 04:36:52,271 INFO: Validation ValSet,		 # psnr: 32.8543
+74000,32.85431417203739
+2025-01-25 04:40:35,427 INFO: [Retin..][epoch:630, iter:  74,500, lr:(1.654e-04,)] [eta: 9:51:32, time (data): 0.444 (0.002)] l_pix: 1.5420e-02 
+2025-01-25 04:44:18,630 INFO: [Retin..][epoch:634, iter:  75,000, lr:(1.642e-04,)] [eta: 9:47:22, time (data): 0.446 (0.002)] l_pix: 1.9899e-02 
+2025-01-25 04:44:18,631 INFO: Saving models and training states.
+2025-01-25 04:44:41,982 INFO: Validation ValSet,		 # psnr: 33.2077
+75000,33.207659437532406
+2025-01-25 04:48:25,524 INFO: [Retin..][epoch:639, iter:  75,500, lr:(1.630e-04,)] [eta: 9:43:42, time (data): 0.444 (0.002)] l_pix: 2.1358e-02 
+2025-01-25 04:52:08,720 INFO: [Retin..][epoch:643, iter:  76,000, lr:(1.619e-04,)] [eta: 9:39:32, time (data): 0.443 (0.002)] l_pix: 1.2314e-02 
+2025-01-25 04:52:08,721 INFO: Saving models and training states.
+2025-01-25 04:52:32,071 INFO: Validation ValSet,		 # psnr: 32.7866
+76000,32.78655550408623
+2025-01-25 04:56:15,693 INFO: [Retin..][epoch:647, iter:  76,500, lr:(1.607e-04,)] [eta: 9:35:52, time (data): 0.445 (0.002)] l_pix: 2.0585e-02 
+2025-01-25 04:59:58,978 INFO: [Retin..][epoch:651, iter:  77,000, lr:(1.595e-04,)] [eta: 9:31:43, time (data): 0.452 (0.002)] l_pix: 1.3402e-02 
+2025-01-25 04:59:58,979 INFO: Saving models and training states.
+2025-01-25 05:00:22,509 INFO: Validation ValSet,		 # psnr: 32.3137
+77000,32.3136704794187
+2025-01-25 05:04:06,146 INFO: [Retin..][epoch:656, iter:  77,500, lr:(1.583e-04,)] [eta: 9:28:02, time (data): 0.444 (0.002)] l_pix: 1.0459e-02 
+2025-01-25 05:07:49,437 INFO: [Retin..][epoch:660, iter:  78,000, lr:(1.570e-04,)] [eta: 9:23:54, time (data): 0.444 (0.002)] l_pix: 1.6257e-02 
+2025-01-25 05:07:49,438 INFO: Saving models and training states.
+2025-01-25 05:08:12,853 INFO: Validation ValSet,		 # psnr: 32.6727
+78000,32.67270778541813
+2025-01-25 05:11:56,245 INFO: [Retin..][epoch:664, iter:  78,500, lr:(1.558e-04,)] [eta: 9:20:12, time (data): 0.444 (0.002)] l_pix: 1.2872e-02 
+2025-01-25 05:15:39,397 INFO: [Retin..][epoch:668, iter:  79,000, lr:(1.545e-04,)] [eta: 9:16:04, time (data): 0.443 (0.002)] l_pix: 9.6423e-03 
+2025-01-25 05:15:39,398 INFO: Saving models and training states.
+2025-01-25 05:16:02,776 INFO: Validation ValSet,		 # psnr: 32.7572
+79000,32.757239246792565
+2025-01-25 05:19:46,246 INFO: [Retin..][epoch:673, iter:  79,500, lr:(1.533e-04,)] [eta: 9:12:22, time (data): 0.444 (0.000)] l_pix: 1.0417e-02 
+2025-01-25 05:23:29,504 INFO: [Retin..][epoch:677, iter:  80,000, lr:(1.520e-04,)] [eta: 9:08:14, time (data): 0.443 (0.002)] l_pix: 1.3492e-02 
+2025-01-25 05:23:29,505 INFO: Saving models and training states.
+2025-01-25 05:23:52,860 INFO: Validation ValSet,		 # psnr: 33.2489
+80000,33.24892818270999
+2025-01-25 05:27:36,074 INFO: [Retin..][epoch:681, iter:  80,500, lr:(1.507e-04,)] [eta: 9:04:32, time (data): 0.455 (0.002)] l_pix: 2.1064e-02 
+2025-01-25 05:31:19,165 INFO: [Retin..][epoch:685, iter:  81,000, lr:(1.494e-04,)] [eta: 9:00:24, time (data): 0.444 (0.002)] l_pix: 1.6461e-02 
+2025-01-25 05:31:19,166 INFO: Saving models and training states.
+2025-01-25 05:31:42,494 INFO: Validation ValSet,		 # psnr: 33.0508
+81000,33.05079478314226
+2025-01-25 05:35:26,162 INFO: [Retin..][epoch:690, iter:  81,500, lr:(1.481e-04,)] [eta: 8:56:41, time (data): 0.442 (0.000)] l_pix: 1.0917e-02 
+2025-01-25 05:39:09,435 INFO: [Retin..][epoch:694, iter:  82,000, lr:(1.467e-04,)] [eta: 8:52:34, time (data): 0.444 (0.002)] l_pix: 1.2404e-02 
+2025-01-25 05:39:09,436 INFO: Saving models and training states.
+2025-01-25 05:39:32,740 INFO: Validation ValSet,		 # psnr: 33.4278
+82000,33.42782472312356
+2025-01-25 05:43:16,005 INFO: [Retin..][epoch:698, iter:  82,500, lr:(1.454e-04,)] [eta: 8:48:51, time (data): 0.443 (0.002)] l_pix: 9.7660e-03 
+2025-01-25 05:46:59,237 INFO: [Retin..][epoch:702, iter:  83,000, lr:(1.441e-04,)] [eta: 8:44:44, time (data): 0.444 (0.002)] l_pix: 1.8067e-02 
+2025-01-25 05:46:59,238 INFO: Saving models and training states.
+2025-01-25 05:47:22,611 INFO: Validation ValSet,		 # psnr: 33.6512
+83000,33.65118633924636
+2025-01-25 05:51:06,055 INFO: [Retin..][epoch:707, iter:  83,500, lr:(1.427e-04,)] [eta: 8:41:01, time (data): 0.444 (0.002)] l_pix: 1.7003e-02 
+2025-01-25 05:54:49,367 INFO: [Retin..][epoch:711, iter:  84,000, lr:(1.413e-04,)] [eta: 8:36:54, time (data): 0.444 (0.002)] l_pix: 1.1517e-02 
+2025-01-25 05:54:49,368 INFO: Saving models and training states.
+2025-01-25 05:55:12,692 INFO: Validation ValSet,		 # psnr: 32.7587
+84000,32.758657181110614
+2025-01-25 05:58:56,062 INFO: [Retin..][epoch:715, iter:  84,500, lr:(1.400e-04,)] [eta: 8:33:11, time (data): 0.444 (0.002)] l_pix: 1.5406e-02 
+2025-01-25 06:02:39,324 INFO: [Retin..][epoch:719, iter:  85,000, lr:(1.386e-04,)] [eta: 8:29:05, time (data): 0.446 (0.002)] l_pix: 1.3632e-02 
+2025-01-25 06:02:39,325 INFO: Saving models and training states.
+2025-01-25 06:03:02,819 INFO: Validation ValSet,		 # psnr: 33.0004
+85000,33.00041575428734
+2025-01-25 06:06:46,109 INFO: [Retin..][epoch:723, iter:  85,500, lr:(1.372e-04,)] [eta: 8:25:21, time (data): 0.443 (0.001)] l_pix: 1.1663e-02 
+2025-01-25 06:10:29,588 INFO: [Retin..][epoch:728, iter:  86,000, lr:(1.358e-04,)] [eta: 8:21:15, time (data): 0.443 (0.002)] l_pix: 9.3209e-03 
+2025-01-25 06:10:29,589 INFO: Saving models and training states.
+2025-01-25 06:10:52,970 INFO: Validation ValSet,		 # psnr: 32.9786
+86000,32.97855986609332
+2025-01-25 06:14:36,159 INFO: [Retin..][epoch:732, iter:  86,500, lr:(1.344e-04,)] [eta: 8:17:30, time (data): 0.444 (0.002)] l_pix: 2.0174e-02 
+2025-01-25 06:18:19,638 INFO: [Retin..][epoch:736, iter:  87,000, lr:(1.330e-04,)] [eta: 8:13:25, time (data): 0.444 (0.002)] l_pix: 2.3929e-02 
+2025-01-25 06:18:19,639 INFO: Saving models and training states.
+2025-01-25 06:18:43,076 INFO: Validation ValSet,		 # psnr: 31.2183
+87000,31.218349006660574
+2025-01-25 06:22:26,440 INFO: [Retin..][epoch:740, iter:  87,500, lr:(1.315e-04,)] [eta: 8:09:40, time (data): 0.444 (0.002)] l_pix: 8.9595e-03 
+2025-01-25 06:26:09,820 INFO: [Retin..][epoch:745, iter:  88,000, lr:(1.301e-04,)] [eta: 8:05:35, time (data): 0.444 (0.002)] l_pix: 1.0165e-02 
+2025-01-25 06:26:09,821 INFO: Saving models and training states.
+2025-01-25 06:26:33,413 INFO: Validation ValSet,		 # psnr: 32.8817
+88000,32.88171342267457
+2025-01-25 06:30:16,544 INFO: [Retin..][epoch:749, iter:  88,500, lr:(1.287e-04,)] [eta: 8:01:50, time (data): 0.444 (0.002)] l_pix: 1.0765e-02 
+2025-01-25 06:33:59,826 INFO: [Retin..][epoch:753, iter:  89,000, lr:(1.272e-04,)] [eta: 7:57:45, time (data): 0.445 (0.001)] l_pix: 1.1400e-02 
+2025-01-25 06:33:59,827 INFO: Saving models and training states.
+2025-01-25 06:34:23,586 INFO: Validation ValSet,		 # psnr: 32.5794
+89000,32.57942509971299
+2025-01-25 06:38:06,729 INFO: [Retin..][epoch:757, iter:  89,500, lr:(1.258e-04,)] [eta: 7:54:00, time (data): 0.444 (0.002)] l_pix: 1.5610e-02 
+2025-01-25 06:41:50,196 INFO: [Retin..][epoch:762, iter:  90,000, lr:(1.243e-04,)] [eta: 7:49:56, time (data): 0.443 (0.000)] l_pix: 1.3986e-02 
+2025-01-25 06:41:50,197 INFO: Saving models and training states.
+2025-01-25 06:42:13,865 INFO: Validation ValSet,		 # psnr: 33.7514
+90000,33.75137478441957
+2025-01-25 06:45:57,258 INFO: [Retin..][epoch:766, iter:  90,500, lr:(1.229e-04,)] [eta: 7:46:11, time (data): 0.445 (0.002)] l_pix: 8.4560e-03 
+2025-01-25 06:49:40,478 INFO: [Retin..][epoch:770, iter:  91,000, lr:(1.214e-04,)] [eta: 7:42:06, time (data): 0.446 (0.002)] l_pix: 2.3747e-02 
+2025-01-25 06:49:40,479 INFO: Saving models and training states.
+2025-01-25 06:50:03,847 INFO: Validation ValSet,		 # psnr: 32.7332
+91000,32.73321797630487
+2025-01-25 06:53:46,983 INFO: [Retin..][epoch:774, iter:  91,500, lr:(1.199e-04,)] [eta: 7:38:20, time (data): 0.444 (0.001)] l_pix: 2.1316e-02 
+2025-01-25 06:57:30,508 INFO: [Retin..][epoch:779, iter:  92,000, lr:(1.184e-04,)] [eta: 7:34:16, time (data): 0.444 (0.002)] l_pix: 1.6173e-02 
+2025-01-25 06:57:30,509 INFO: Saving models and training states.
+2025-01-25 06:57:53,859 INFO: Validation ValSet,		 # psnr: 32.3066
+92000,32.30658681316854
+2025-01-25 07:01:37,122 INFO: [Retin..][epoch:783, iter:  92,500, lr:(1.170e-04,)] [eta: 7:30:30, time (data): 0.445 (0.002)] l_pix: 1.7414e-02 
+2025-01-25 07:05:20,444 INFO: [Retin..][epoch:787, iter:  93,000, lr:(1.155e-04,)] [eta: 7:26:26, time (data): 0.446 (0.002)] l_pix: 9.5098e-03 
+2025-01-25 07:05:20,445 INFO: Saving models and training states.
+2025-01-25 07:05:43,767 INFO: Validation ValSet,		 # psnr: 33.1703
+93000,33.17029902913035
+2025-01-25 07:09:26,995 INFO: [Retin..][epoch:791, iter:  93,500, lr:(1.140e-04,)] [eta: 7:22:40, time (data): 0.443 (0.001)] l_pix: 1.0496e-02 
+2025-01-25 07:13:10,551 INFO: [Retin..][epoch:796, iter:  94,000, lr:(1.125e-04,)] [eta: 7:18:36, time (data): 0.442 (0.000)] l_pix: 1.1051e-02 
+2025-01-25 07:13:10,552 INFO: Saving models and training states.
+2025-01-25 07:13:33,949 INFO: Validation ValSet,		 # psnr: 33.2478
+94000,33.24778258433581
+2025-01-25 07:17:17,107 INFO: [Retin..][epoch:800, iter:  94,500, lr:(1.110e-04,)] [eta: 7:14:50, time (data): 0.443 (0.002)] l_pix: 7.4118e-03 
+2025-01-25 07:21:00,623 INFO: [Retin..][epoch:804, iter:  95,000, lr:(1.095e-04,)] [eta: 7:10:47, time (data): 0.444 (0.002)] l_pix: 1.4401e-02 
+2025-01-25 07:21:00,624 INFO: Saving models and training states.
+2025-01-25 07:21:24,144 INFO: Validation ValSet,		 # psnr: 33.2057
+95000,33.20568386876147
+2025-01-25 07:25:07,520 INFO: [Retin..][epoch:808, iter:  95,500, lr:(1.080e-04,)] [eta: 7:07:00, time (data): 0.444 (0.002)] l_pix: 1.8655e-02 
+2025-01-25 07:28:50,686 INFO: [Retin..][epoch:812, iter:  96,000, lr:(1.065e-04,)] [eta: 7:02:57, time (data): 0.443 (0.002)] l_pix: 8.6624e-03 
+2025-01-25 07:28:50,687 INFO: Saving models and training states.
+2025-01-25 07:29:14,075 INFO: Validation ValSet,		 # psnr: 33.0360
+96000,33.03602065523511
+2025-01-25 07:32:57,565 INFO: [Retin..][epoch:817, iter:  96,500, lr:(1.050e-04,)] [eta: 6:59:10, time (data): 0.444 (0.002)] l_pix: 1.8614e-02 
+2025-01-25 07:36:40,947 INFO: [Retin..][epoch:821, iter:  97,000, lr:(1.035e-04,)] [eta: 6:55:07, time (data): 0.444 (0.002)] l_pix: 1.2710e-02 
+2025-01-25 07:36:40,948 INFO: Saving models and training states.
+2025-01-25 07:37:04,458 INFO: Validation ValSet,		 # psnr: 33.2222
+97000,33.222198222327336
+2025-01-25 07:40:47,673 INFO: [Retin..][epoch:825, iter:  97,500, lr:(1.020e-04,)] [eta: 6:51:20, time (data): 0.444 (0.002)] l_pix: 1.7499e-02 
+2025-01-25 07:44:30,976 INFO: [Retin..][epoch:829, iter:  98,000, lr:(1.005e-04,)] [eta: 6:47:17, time (data): 0.457 (0.002)] l_pix: 1.2869e-02 
+2025-01-25 07:44:30,977 INFO: Saving models and training states.
+2025-01-25 07:44:54,502 INFO: Validation ValSet,		 # psnr: 33.6883
+98000,33.688289646554836
+2025-01-25 07:48:37,963 INFO: [Retin..][epoch:834, iter:  98,500, lr:(9.900e-05,)] [eta: 6:43:30, time (data): 0.444 (0.001)] l_pix: 1.5234e-02 
+2025-01-25 07:52:21,118 INFO: [Retin..][epoch:838, iter:  99,000, lr:(9.750e-05,)] [eta: 6:39:27, time (data): 0.447 (0.002)] l_pix: 9.1295e-03 
+2025-01-25 07:52:21,118 INFO: Saving models and training states.
+2025-01-25 07:52:44,623 INFO: Validation ValSet,		 # psnr: 33.5952
+99000,33.595204198598665
+2025-01-25 07:56:27,927 INFO: [Retin..][epoch:842, iter:  99,500, lr:(9.600e-05,)] [eta: 6:35:39, time (data): 0.445 (0.002)] l_pix: 9.7673e-03 
+2025-01-25 08:00:11,143 INFO: [Retin..][epoch:846, iter: 100,000, lr:(9.450e-05,)] [eta: 6:31:37, time (data): 0.445 (0.002)] l_pix: 1.4876e-02 
+2025-01-25 08:00:11,145 INFO: Saving models and training states.
+2025-01-25 08:00:34,659 INFO: Validation ValSet,		 # psnr: 33.6193
+100000,33.61930205402416
+2025-01-25 08:04:18,252 INFO: [Retin..][epoch:851, iter: 100,500, lr:(9.300e-05,)] [eta: 6:27:49, time (data): 0.442 (0.000)] l_pix: 1.4895e-02 
+2025-01-25 08:08:01,486 INFO: [Retin..][epoch:855, iter: 101,000, lr:(9.150e-05,)] [eta: 6:23:48, time (data): 0.444 (0.001)] l_pix: 1.3831e-02 
+2025-01-25 08:08:01,487 INFO: Saving models and training states.
+2025-01-25 08:08:24,983 INFO: Validation ValSet,		 # psnr: 33.4625
+101000,33.462473924273546
+2025-01-25 08:12:08,433 INFO: [Retin..][epoch:859, iter: 101,500, lr:(9.000e-05,)] [eta: 6:19:59, time (data): 0.445 (0.002)] l_pix: 1.8437e-02 
+2025-01-25 08:15:51,841 INFO: [Retin..][epoch:863, iter: 102,000, lr:(8.851e-05,)] [eta: 6:15:58, time (data): 0.443 (0.002)] l_pix: 9.7575e-03 
+2025-01-25 08:15:51,842 INFO: Saving models and training states.
+2025-01-25 08:16:15,213 INFO: Validation ValSet,		 # psnr: 33.3947
+102000,33.394740711370254
+2025-01-25 08:19:58,587 INFO: [Retin..][epoch:868, iter: 102,500, lr:(8.702e-05,)] [eta: 6:12:09, time (data): 0.442 (0.000)] l_pix: 1.3020e-02 
+2025-01-25 08:23:41,793 INFO: [Retin..][epoch:872, iter: 103,000, lr:(8.553e-05,)] [eta: 6:08:08, time (data): 0.444 (0.002)] l_pix: 8.4236e-03 
+2025-01-25 08:23:41,794 INFO: Saving models and training states.
+2025-01-25 08:24:05,172 INFO: Validation ValSet,		 # psnr: 33.6634
+103000,33.6634411942442
+2025-01-25 08:27:48,314 INFO: [Retin..][epoch:876, iter: 103,500, lr:(8.405e-05,)] [eta: 6:04:19, time (data): 0.443 (0.002)] l_pix: 9.4990e-03 
+2025-01-25 08:31:31,587 INFO: [Retin..][epoch:880, iter: 104,000, lr:(8.257e-05,)] [eta: 6:00:18, time (data): 0.448 (0.002)] l_pix: 1.7564e-02 
+2025-01-25 08:31:31,587 INFO: Saving models and training states.
+2025-01-25 08:31:54,989 INFO: Validation ValSet,		 # psnr: 33.4902
+104000,33.49022284784799
+2025-01-25 08:35:38,110 INFO: [Retin..][epoch:884, iter: 104,500, lr:(8.109e-05,)] [eta: 5:56:29, time (data): 0.444 (0.002)] l_pix: 1.2727e-02 
+2025-01-25 08:39:21,841 INFO: [Retin..][epoch:889, iter: 105,000, lr:(7.962e-05,)] [eta: 5:52:28, time (data): 0.443 (0.002)] l_pix: 1.1823e-02 
+2025-01-25 08:39:21,842 INFO: Saving models and training states.
+2025-01-25 08:39:45,254 INFO: Validation ValSet,		 # psnr: 33.5872
+105000,33.58716523055481
+2025-01-25 08:43:28,761 INFO: [Retin..][epoch:893, iter: 105,500, lr:(7.815e-05,)] [eta: 5:48:39, time (data): 0.444 (0.002)] l_pix: 1.3674e-02 
+2025-01-25 08:47:12,052 INFO: [Retin..][epoch:897, iter: 106,000, lr:(7.669e-05,)] [eta: 5:44:38, time (data): 0.444 (0.002)] l_pix: 1.6021e-02 
+2025-01-25 08:47:12,053 INFO: Saving models and training states.
+2025-01-25 08:47:35,439 INFO: Validation ValSet,		 # psnr: 33.4895
+106000,33.48954487580244
+2025-01-25 08:51:18,629 INFO: [Retin..][epoch:901, iter: 106,500, lr:(7.523e-05,)] [eta: 5:40:49, time (data): 0.443 (0.001)] l_pix: 9.9848e-03 
+2025-01-25 08:55:02,142 INFO: [Retin..][epoch:906, iter: 107,000, lr:(7.378e-05,)] [eta: 5:36:48, time (data): 0.444 (0.002)] l_pix: 1.7705e-02 
+2025-01-25 08:55:02,143 INFO: Saving models and training states.
+2025-01-25 08:55:25,526 INFO: Validation ValSet,		 # psnr: 33.5323
+107000,33.53231739145112
+2025-01-25 08:59:08,769 INFO: [Retin..][epoch:910, iter: 107,500, lr:(7.234e-05,)] [eta: 5:32:59, time (data): 0.443 (0.002)] l_pix: 1.0613e-02 
+2025-01-25 09:02:52,032 INFO: [Retin..][epoch:914, iter: 108,000, lr:(7.090e-05,)] [eta: 5:28:58, time (data): 0.443 (0.002)] l_pix: 1.9727e-02 
+2025-01-25 09:02:52,033 INFO: Saving models and training states.
+2025-01-25 09:03:15,417 INFO: Validation ValSet,		 # psnr: 33.2610
+108000,33.26097078297783
+2025-01-25 09:06:58,700 INFO: [Retin..][epoch:918, iter: 108,500, lr:(6.947e-05,)] [eta: 5:25:08, time (data): 0.443 (0.002)] l_pix: 9.1078e-03 
+2025-01-25 09:10:42,295 INFO: [Retin..][epoch:923, iter: 109,000, lr:(6.805e-05,)] [eta: 5:21:08, time (data): 0.451 (0.000)] l_pix: 1.6527e-02 
+2025-01-25 09:10:42,296 INFO: Saving models and training states.
+2025-01-25 09:11:05,751 INFO: Validation ValSet,		 # psnr: 33.2557
+109000,33.255714879161395
+2025-01-25 09:14:48,849 INFO: [Retin..][epoch:927, iter: 109,500, lr:(6.663e-05,)] [eta: 5:17:18, time (data): 0.445 (0.002)] l_pix: 1.5044e-02 
+2025-01-25 09:18:31,990 INFO: [Retin..][epoch:931, iter: 110,000, lr:(6.522e-05,)] [eta: 5:13:18, time (data): 0.444 (0.002)] l_pix: 1.5566e-02 
+2025-01-25 09:18:31,991 INFO: Saving models and training states.
+2025-01-25 09:18:55,398 INFO: Validation ValSet,		 # psnr: 33.8366
+110000,33.83660254551943
+2025-01-25 09:22:38,628 INFO: [Retin..][epoch:935, iter: 110,500, lr:(6.382e-05,)] [eta: 5:09:28, time (data): 0.444 (0.002)] l_pix: 1.6568e-02 
+2025-01-25 09:26:22,102 INFO: [Retin..][epoch:940, iter: 111,000, lr:(6.243e-05,)] [eta: 5:05:28, time (data): 0.442 (0.000)] l_pix: 9.5601e-03 
+2025-01-25 09:26:22,103 INFO: Saving models and training states.
+2025-01-25 09:26:45,484 INFO: Validation ValSet,		 # psnr: 33.7372
+111000,33.73720151747146
+2025-01-25 09:30:28,691 INFO: [Retin..][epoch:944, iter: 111,500, lr:(6.104e-05,)] [eta: 5:01:38, time (data): 0.444 (0.002)] l_pix: 1.5600e-02 
+2025-01-25 09:34:11,962 INFO: [Retin..][epoch:948, iter: 112,000, lr:(5.967e-05,)] [eta: 4:57:38, time (data): 0.444 (0.002)] l_pix: 1.2138e-02 
+2025-01-25 09:34:11,963 INFO: Saving models and training states.
+2025-01-25 09:34:35,326 INFO: Validation ValSet,		 # psnr: 33.4711
+112000,33.4710721660586
+2025-01-25 09:38:18,520 INFO: [Retin..][epoch:952, iter: 112,500, lr:(5.830e-05,)] [eta: 4:53:48, time (data): 0.444 (0.002)] l_pix: 8.1176e-03 
+2025-01-25 09:42:01,928 INFO: [Retin..][epoch:957, iter: 113,000, lr:(5.694e-05,)] [eta: 4:49:48, time (data): 0.443 (0.000)] l_pix: 1.6828e-02 
+2025-01-25 09:42:01,929 INFO: Saving models and training states.
+2025-01-25 09:42:25,272 INFO: Validation ValSet,		 # psnr: 33.8256
+113000,33.82555082910012
+2025-01-25 09:46:08,608 INFO: [Retin..][epoch:961, iter: 113,500, lr:(5.560e-05,)] [eta: 4:45:58, time (data): 0.446 (0.001)] l_pix: 1.0006e-02 
+2025-01-25 09:49:51,879 INFO: [Retin..][epoch:965, iter: 114,000, lr:(5.426e-05,)] [eta: 4:41:58, time (data): 0.444 (0.002)] l_pix: 8.9242e-03 
+2025-01-25 09:49:51,879 INFO: Saving models and training states.
+2025-01-25 09:50:15,264 INFO: Validation ValSet,		 # psnr: 33.1289
+114000,33.128897209623865
+2025-01-25 09:53:58,433 INFO: [Retin..][epoch:969, iter: 114,500, lr:(5.294e-05,)] [eta: 4:38:07, time (data): 0.444 (0.002)] l_pix: 1.3781e-02 
+2025-01-25 09:57:41,712 INFO: [Retin..][epoch:973, iter: 115,000, lr:(5.162e-05,)] [eta: 4:34:08, time (data): 0.444 (0.002)] l_pix: 1.7188e-02 
+2025-01-25 09:57:41,712 INFO: Saving models and training states.
+2025-01-25 09:58:05,045 INFO: Validation ValSet,		 # psnr: 33.4285
+115000,33.42845431083374
+2025-01-25 10:01:48,417 INFO: [Retin..][epoch:978, iter: 115,500, lr:(5.032e-05,)] [eta: 4:30:17, time (data): 0.444 (0.002)] l_pix: 9.9122e-03 
+2025-01-25 10:05:31,812 INFO: [Retin..][epoch:982, iter: 116,000, lr:(4.903e-05,)] [eta: 4:26:18, time (data): 0.444 (0.002)] l_pix: 1.5326e-02 
+2025-01-25 10:05:31,813 INFO: Saving models and training states.
+2025-01-25 10:05:55,260 INFO: Validation ValSet,		 # psnr: 33.6974
+116000,33.69741453758304
+2025-01-25 10:09:38,486 INFO: [Retin..][epoch:986, iter: 116,500, lr:(4.775e-05,)] [eta: 4:22:27, time (data): 0.443 (0.002)] l_pix: 1.0564e-02 
+2025-01-25 10:13:21,530 INFO: [Retin..][epoch:990, iter: 117,000, lr:(4.648e-05,)] [eta: 4:18:28, time (data): 0.443 (0.002)] l_pix: 1.3162e-02 
+2025-01-25 10:13:21,531 INFO: Saving models and training states.
+2025-01-25 10:13:45,003 INFO: Validation ValSet,		 # psnr: 33.7665
+117000,33.76650346941717
+2025-01-25 10:17:28,509 INFO: [Retin..][epoch:995, iter: 117,500, lr:(4.522e-05,)] [eta: 4:14:37, time (data): 0.444 (0.002)] l_pix: 1.2189e-02 
+2025-01-25 10:21:11,582 INFO: [Retin..][epoch:999, iter: 118,000, lr:(4.398e-05,)] [eta: 4:10:38, time (data): 0.445 (0.002)] l_pix: 1.4879e-02 
+2025-01-25 10:21:11,583 INFO: Saving models and training states.
+2025-01-25 10:21:34,983 INFO: Validation ValSet,		 # psnr: 33.5237
+118000,33.523700665267725
+2025-01-25 10:25:18,224 INFO: [Retin..][epoch:1003, iter: 118,500, lr:(4.275e-05,)] [eta: 4:06:47, time (data): 0.444 (0.002)] l_pix: 1.6995e-02 
+2025-01-25 10:29:01,488 INFO: [Retin..][epoch:1007, iter: 119,000, lr:(4.153e-05,)] [eta: 4:02:48, time (data): 0.445 (0.002)] l_pix: 1.2629e-02 
+2025-01-25 10:29:01,489 INFO: Saving models and training states.
+2025-01-25 10:29:24,846 INFO: Validation ValSet,		 # psnr: 33.0929
+119000,33.09292935486725
+2025-01-25 10:33:08,641 INFO: [Retin..][epoch:1012, iter: 119,500, lr:(4.033e-05,)] [eta: 3:58:57, time (data): 0.443 (0.000)] l_pix: 2.2001e-02 
+2025-01-25 10:36:52,061 INFO: [Retin..][epoch:1016, iter: 120,000, lr:(3.914e-05,)] [eta: 3:54:58, time (data): 0.444 (0.002)] l_pix: 1.1282e-02 
+2025-01-25 10:36:52,062 INFO: Saving models and training states.
+2025-01-25 10:37:15,700 INFO: Validation ValSet,		 # psnr: 32.8781
+120000,32.87806937463541
+2025-01-25 10:40:59,002 INFO: [Retin..][epoch:1020, iter: 120,500, lr:(3.796e-05,)] [eta: 3:51:07, time (data): 0.444 (0.002)] l_pix: 7.8564e-03 
+2025-01-25 10:44:42,184 INFO: [Retin..][epoch:1024, iter: 121,000, lr:(3.680e-05,)] [eta: 3:47:09, time (data): 0.444 (0.002)] l_pix: 1.6583e-02 
+2025-01-25 10:44:42,185 INFO: Saving models and training states.
+2025-01-25 10:45:05,890 INFO: Validation ValSet,		 # psnr: 33.5584
+121000,33.55839606716167
+2025-01-25 10:48:49,400 INFO: [Retin..][epoch:1029, iter: 121,500, lr:(3.565e-05,)] [eta: 3:43:17, time (data): 0.444 (0.002)] l_pix: 1.5821e-02 
+2025-01-25 10:52:32,518 INFO: [Retin..][epoch:1033, iter: 122,000, lr:(3.452e-05,)] [eta: 3:39:19, time (data): 0.443 (0.002)] l_pix: 1.7251e-02 
+2025-01-25 10:52:32,519 INFO: Saving models and training states.
+2025-01-25 10:52:55,827 INFO: Validation ValSet,		 # psnr: 33.7960
+122000,33.79603456398888
+2025-01-25 10:56:39,185 INFO: [Retin..][epoch:1037, iter: 122,500, lr:(3.340e-05,)] [eta: 3:35:27, time (data): 0.445 (0.002)] l_pix: 6.3890e-03 
+2025-01-25 11:00:22,524 INFO: [Retin..][epoch:1041, iter: 123,000, lr:(3.230e-05,)] [eta: 3:31:29, time (data): 0.444 (0.002)] l_pix: 1.8146e-02 
+2025-01-25 11:00:22,525 INFO: Saving models and training states.
+2025-01-25 11:00:46,097 INFO: Validation ValSet,		 # psnr: 33.9061
+123000,33.90609567745654
+2025-01-25 11:04:29,500 INFO: [Retin..][epoch:1046, iter: 123,500, lr:(3.122e-05,)] [eta: 3:27:37, time (data): 0.442 (0.000)] l_pix: 1.3906e-02 
+2025-01-25 11:08:12,610 INFO: [Retin..][epoch:1050, iter: 124,000, lr:(3.015e-05,)] [eta: 3:23:39, time (data): 0.444 (0.001)] l_pix: 1.4894e-02 
+2025-01-25 11:08:12,611 INFO: Saving models and training states.
+2025-01-25 11:08:36,039 INFO: Validation ValSet,		 # psnr: 33.8065
+124000,33.80648927956577
+2025-01-25 11:12:19,283 INFO: [Retin..][epoch:1054, iter: 124,500, lr:(2.909e-05,)] [eta: 3:19:46, time (data): 0.445 (0.002)] l_pix: 9.2411e-03 
+2025-01-25 11:16:02,367 INFO: [Retin..][epoch:1058, iter: 125,000, lr:(2.805e-05,)] [eta: 3:15:49, time (data): 0.444 (0.002)] l_pix: 9.0848e-03 
+2025-01-25 11:16:02,368 INFO: Saving models and training states.
+2025-01-25 11:16:25,767 INFO: Validation ValSet,		 # psnr: 33.9728
+125000,33.97280933173739
+2025-01-25 11:20:09,158 INFO: [Retin..][epoch:1062, iter: 125,500, lr:(2.703e-05,)] [eta: 3:11:56, time (data): 0.444 (0.002)] l_pix: 1.6680e-02 
+2025-01-25 11:23:52,657 INFO: [Retin..][epoch:1067, iter: 126,000, lr:(2.603e-05,)] [eta: 3:07:59, time (data): 0.444 (0.002)] l_pix: 1.1625e-02 
+2025-01-25 11:23:52,658 INFO: Saving models and training states.
+2025-01-25 11:24:16,053 INFO: Validation ValSet,		 # psnr: 33.6004
+126000,33.60042429407562
+2025-01-25 11:27:59,236 INFO: [Retin..][epoch:1071, iter: 126,500, lr:(2.504e-05,)] [eta: 3:04:06, time (data): 0.443 (0.002)] l_pix: 7.1328e-03 
+2025-01-25 11:31:42,398 INFO: [Retin..][epoch:1075, iter: 127,000, lr:(2.407e-05,)] [eta: 3:00:09, time (data): 0.444 (0.002)] l_pix: 1.0006e-02 
+2025-01-25 11:31:42,398 INFO: Saving models and training states.
+2025-01-25 11:32:05,871 INFO: Validation ValSet,		 # psnr: 33.7622
+127000,33.762213410577154
+2025-01-25 11:35:49,181 INFO: [Retin..][epoch:1079, iter: 127,500, lr:(2.311e-05,)] [eta: 2:56:16, time (data): 0.444 (0.002)] l_pix: 1.0615e-02 
+2025-01-25 11:39:32,762 INFO: [Retin..][epoch:1084, iter: 128,000, lr:(2.218e-05,)] [eta: 2:52:19, time (data): 0.445 (0.002)] l_pix: 1.6669e-02 
+2025-01-25 11:39:32,763 INFO: Saving models and training states.
+2025-01-25 11:39:56,155 INFO: Validation ValSet,		 # psnr: 33.7730
+128000,33.773016711581334
+2025-01-25 11:43:39,596 INFO: [Retin..][epoch:1088, iter: 128,500, lr:(2.126e-05,)] [eta: 2:48:26, time (data): 0.444 (0.002)] l_pix: 1.0225e-02 
+2025-01-25 11:47:22,828 INFO: [Retin..][epoch:1092, iter: 129,000, lr:(2.036e-05,)] [eta: 2:44:29, time (data): 0.444 (0.002)] l_pix: 8.9986e-03 
+2025-01-25 11:47:22,829 INFO: Saving models and training states.
+2025-01-25 11:47:46,223 INFO: Validation ValSet,		 # psnr: 33.6635
+129000,33.66346925360984
+2025-01-25 11:51:29,505 INFO: [Retin..][epoch:1096, iter: 129,500, lr:(1.948e-05,)] [eta: 2:40:36, time (data): 0.445 (0.002)] l_pix: 1.6960e-02 
+2025-01-25 11:55:13,035 INFO: [Retin..][epoch:1101, iter: 130,000, lr:(1.861e-05,)] [eta: 2:36:39, time (data): 0.445 (0.002)] l_pix: 1.7844e-02 
+2025-01-25 11:55:13,036 INFO: Saving models and training states.
+2025-01-25 11:55:36,528 INFO: Validation ValSet,		 # psnr: 33.8911
+130000,33.891062134097545
+2025-01-25 11:59:19,860 INFO: [Retin..][epoch:1105, iter: 130,500, lr:(1.777e-05,)] [eta: 2:32:46, time (data): 0.444 (0.002)] l_pix: 1.0120e-02 
+2025-01-25 12:03:03,150 INFO: [Retin..][epoch:1109, iter: 131,000, lr:(1.694e-05,)] [eta: 2:28:49, time (data): 0.444 (0.002)] l_pix: 1.4651e-02 
+2025-01-25 12:03:03,151 INFO: Saving models and training states.
+2025-01-25 12:03:26,642 INFO: Validation ValSet,		 # psnr: 33.7702
+131000,33.770229642496304
+2025-01-25 12:07:10,076 INFO: [Retin..][epoch:1113, iter: 131,500, lr:(1.614e-05,)] [eta: 2:24:56, time (data): 0.444 (0.002)] l_pix: 1.1033e-02 
+2025-01-25 12:10:53,677 INFO: [Retin..][epoch:1118, iter: 132,000, lr:(1.535e-05,)] [eta: 2:20:59, time (data): 0.443 (0.000)] l_pix: 1.5717e-02 
+2025-01-25 12:10:53,678 INFO: Saving models and training states.
+2025-01-25 12:11:17,396 INFO: Validation ValSet,		 # psnr: 34.0297
+132000,34.02970709144802
+2025-01-25 12:15:00,786 INFO: [Retin..][epoch:1122, iter: 132,500, lr:(1.458e-05,)] [eta: 2:17:06, time (data): 0.444 (0.001)] l_pix: 9.1956e-03 
+2025-01-25 12:18:44,022 INFO: [Retin..][epoch:1126, iter: 133,000, lr:(1.384e-05,)] [eta: 2:13:09, time (data): 0.444 (0.002)] l_pix: 1.0044e-02 
+2025-01-25 12:18:44,023 INFO: Saving models and training states.
+2025-01-25 12:19:07,500 INFO: Validation ValSet,		 # psnr: 33.6582
+133000,33.65822245555886
+2025-01-25 12:22:50,750 INFO: [Retin..][epoch:1130, iter: 133,500, lr:(1.311e-05,)] [eta: 2:09:16, time (data): 0.449 (0.002)] l_pix: 1.5133e-02 
+2025-01-25 12:26:34,160 INFO: [Retin..][epoch:1134, iter: 134,000, lr:(1.240e-05,)] [eta: 2:05:19, time (data): 0.444 (0.002)] l_pix: 1.1597e-02 
+2025-01-25 12:26:34,161 INFO: Saving models and training states.
+2025-01-25 12:26:57,563 INFO: Validation ValSet,		 # psnr: 33.7729
+134000,33.7728549313855
+2025-01-25 12:30:41,142 INFO: [Retin..][epoch:1139, iter: 134,500, lr:(1.171e-05,)] [eta: 2:01:26, time (data): 0.444 (0.002)] l_pix: 1.2067e-02 
+2025-01-25 12:34:24,472 INFO: [Retin..][epoch:1143, iter: 135,000, lr:(1.104e-05,)] [eta: 1:57:29, time (data): 0.444 (0.002)] l_pix: 9.7170e-03 
+2025-01-25 12:34:24,473 INFO: Saving models and training states.
+2025-01-25 12:34:47,923 INFO: Validation ValSet,		 # psnr: 33.6841
+135000,33.68414584770351
+2025-01-25 12:38:31,164 INFO: [Retin..][epoch:1147, iter: 135,500, lr:(1.039e-05,)] [eta: 1:53:35, time (data): 0.444 (0.002)] l_pix: 9.9141e-03 
+2025-01-25 12:42:14,442 INFO: [Retin..][epoch:1151, iter: 136,000, lr:(9.767e-06,)] [eta: 1:49:39, time (data): 0.444 (0.002)] l_pix: 1.3443e-02 
+2025-01-25 12:42:14,444 INFO: Saving models and training states.
+2025-01-25 12:42:37,823 INFO: Validation ValSet,		 # psnr: 33.6388
+136000,33.63877350451081
+2025-01-25 12:46:21,395 INFO: [Retin..][epoch:1156, iter: 136,500, lr:(9.161e-06,)] [eta: 1:45:45, time (data): 0.445 (0.002)] l_pix: 1.1629e-02 
+2025-01-25 12:50:04,675 INFO: [Retin..][epoch:1160, iter: 137,000, lr:(8.575e-06,)] [eta: 1:41:49, time (data): 0.445 (0.002)] l_pix: 1.9251e-02 
+2025-01-25 12:50:04,676 INFO: Saving models and training states.
+2025-01-25 12:50:28,048 INFO: Validation ValSet,		 # psnr: 33.6565
+137000,33.656529350005876
+2025-01-25 12:54:11,357 INFO: [Retin..][epoch:1164, iter: 137,500, lr:(8.010e-06,)] [eta: 1:37:55, time (data): 0.444 (0.002)] l_pix: 7.3891e-03 
+2025-01-25 12:57:54,641 INFO: [Retin..][epoch:1168, iter: 138,000, lr:(7.467e-06,)] [eta: 1:33:59, time (data): 0.444 (0.002)] l_pix: 9.2806e-03 
+2025-01-25 12:57:54,642 INFO: Saving models and training states.
+2025-01-25 12:58:18,339 INFO: Validation ValSet,		 # psnr: 33.6447
+138000,33.64468394249076
+2025-01-25 13:02:01,838 INFO: [Retin..][epoch:1173, iter: 138,500, lr:(6.945e-06,)] [eta: 1:30:05, time (data): 0.443 (0.000)] l_pix: 8.8333e-03 
+2025-01-25 13:05:45,103 INFO: [Retin..][epoch:1177, iter: 139,000, lr:(6.444e-06,)] [eta: 1:26:09, time (data): 0.444 (0.002)] l_pix: 7.8066e-03 
+2025-01-25 13:05:45,104 INFO: Saving models and training states.
+2025-01-25 13:06:08,456 INFO: Validation ValSet,		 # psnr: 33.7265
+139000,33.72646010023218
+2025-01-25 13:09:51,726 INFO: [Retin..][epoch:1181, iter: 139,500, lr:(5.964e-06,)] [eta: 1:22:15, time (data): 0.444 (0.002)] l_pix: 7.2462e-03 
+2025-01-25 13:13:35,123 INFO: [Retin..][epoch:1185, iter: 140,000, lr:(5.506e-06,)] [eta: 1:18:19, time (data): 0.462 (0.002)] l_pix: 8.5346e-03 
+2025-01-25 13:13:35,124 INFO: Saving models and training states.
+2025-01-25 13:13:58,532 INFO: Validation ValSet,		 # psnr: 33.7870
+140000,33.78701914997326
+2025-01-25 13:17:41,931 INFO: [Retin..][epoch:1190, iter: 140,500, lr:(5.070e-06,)] [eta: 1:14:25, time (data): 0.443 (0.000)] l_pix: 1.5215e-02 
+2025-01-25 13:21:25,237 INFO: [Retin..][epoch:1194, iter: 141,000, lr:(4.655e-06,)] [eta: 1:10:29, time (data): 0.444 (0.002)] l_pix: 1.2375e-02 
+2025-01-25 13:21:25,238 INFO: Saving models and training states.
+2025-01-25 13:21:48,632 INFO: Validation ValSet,		 # psnr: 33.6870
+141000,33.687018381239746
+2025-01-25 13:25:31,924 INFO: [Retin..][epoch:1198, iter: 141,500, lr:(4.263e-06,)] [eta: 1:06:35, time (data): 0.444 (0.002)] l_pix: 1.2527e-02 
+2025-01-25 13:29:15,356 INFO: [Retin..][epoch:1202, iter: 142,000, lr:(3.892e-06,)] [eta: 1:02:39, time (data): 0.444 (0.002)] l_pix: 9.1509e-03 
+2025-01-25 13:29:15,357 INFO: Saving models and training states.
+2025-01-25 13:29:38,862 INFO: Validation ValSet,		 # psnr: 33.7270
+142000,33.72696625652408
+2025-01-25 13:33:22,372 INFO: [Retin..][epoch:1207, iter: 142,500, lr:(3.543e-06,)] [eta: 0:58:45, time (data): 0.446 (0.004)] l_pix: 9.0730e-03 
+2025-01-25 13:37:05,610 INFO: [Retin..][epoch:1211, iter: 143,000, lr:(3.217e-06,)] [eta: 0:54:49, time (data): 0.444 (0.002)] l_pix: 9.1793e-03 
+2025-01-25 13:37:05,611 INFO: Saving models and training states.
+2025-01-25 13:37:29,240 INFO: Validation ValSet,		 # psnr: 33.8240
+143000,33.82404075079186
+2025-01-25 13:41:12,388 INFO: [Retin..][epoch:1215, iter: 143,500, lr:(2.912e-06,)] [eta: 0:50:55, time (data): 0.444 (0.002)] l_pix: 9.0028e-03 
+2025-01-25 13:44:55,667 INFO: [Retin..][epoch:1219, iter: 144,000, lr:(2.630e-06,)] [eta: 0:46:59, time (data): 0.447 (0.002)] l_pix: 1.5390e-02 
+2025-01-25 13:44:55,668 INFO: Saving models and training states.
+2025-01-25 13:45:19,109 INFO: Validation ValSet,		 # psnr: 33.7444
+144000,33.74443905379241
+2025-01-25 13:49:02,432 INFO: [Retin..][epoch:1223, iter: 144,500, lr:(2.371e-06,)] [eta: 0:43:05, time (data): 0.444 (0.002)] l_pix: 8.5069e-03 
+2025-01-25 13:52:46,081 INFO: [Retin..][epoch:1228, iter: 145,000, lr:(2.133e-06,)] [eta: 0:39:09, time (data): 0.443 (0.002)] l_pix: 8.5344e-03 
+2025-01-25 13:52:46,082 INFO: Saving models and training states.
+2025-01-25 13:53:09,497 INFO: Validation ValSet,		 # psnr: 33.7470
+145000,33.74703599598732
+2025-01-25 13:56:52,822 INFO: [Retin..][epoch:1232, iter: 145,500, lr:(1.918e-06,)] [eta: 0:35:15, time (data): 0.444 (0.002)] l_pix: 1.3376e-02 
+2025-01-25 14:00:36,189 INFO: [Retin..][epoch:1236, iter: 146,000, lr:(1.726e-06,)] [eta: 0:31:19, time (data): 0.446 (0.002)] l_pix: 8.7260e-03 
+2025-01-25 14:00:36,190 INFO: Saving models and training states.
+2025-01-25 14:00:59,571 INFO: Validation ValSet,		 # psnr: 33.7204
+146000,33.720422945661404
+2025-01-25 14:04:42,801 INFO: [Retin..][epoch:1240, iter: 146,500, lr:(1.556e-06,)] [eta: 0:27:24, time (data): 0.444 (0.002)] l_pix: 1.3732e-02 
+2025-01-25 14:08:26,357 INFO: [Retin..][epoch:1245, iter: 147,000, lr:(1.409e-06,)] [eta: 0:23:29, time (data): 0.445 (0.002)] l_pix: 1.3826e-02 
+2025-01-25 14:08:26,358 INFO: Saving models and training states.
+2025-01-25 14:08:49,742 INFO: Validation ValSet,		 # psnr: 33.6992
+147000,33.69919260637531
+2025-01-25 14:12:32,924 INFO: [Retin..][epoch:1249, iter: 147,500, lr:(1.284e-06,)] [eta: 0:19:34, time (data): 0.444 (0.001)] l_pix: 8.5012e-03 
+2025-01-25 14:16:16,167 INFO: [Retin..][epoch:1253, iter: 148,000, lr:(1.182e-06,)] [eta: 0:15:39, time (data): 0.443 (0.002)] l_pix: 8.9211e-03 
+2025-01-25 14:16:16,167 INFO: Saving models and training states.
+2025-01-25 14:16:39,531 INFO: Validation ValSet,		 # psnr: 33.6898
+148000,33.68977747661588
+2025-01-25 14:20:22,865 INFO: [Retin..][epoch:1257, iter: 148,500, lr:(1.102e-06,)] [eta: 0:11:44, time (data): 0.445 (0.002)] l_pix: 1.1266e-02 
+2025-01-25 14:24:06,520 INFO: [Retin..][epoch:1262, iter: 149,000, lr:(1.045e-06,)] [eta: 0:07:49, time (data): 0.443 (0.000)] l_pix: 1.4796e-02 
+2025-01-25 14:24:06,521 INFO: Saving models and training states.
+2025-01-25 14:24:30,032 INFO: Validation ValSet,		 # psnr: 33.7012
+149000,33.70118852254095
+2025-01-25 14:28:13,196 INFO: [Retin..][epoch:1266, iter: 149,500, lr:(1.011e-06,)] [eta: 0:03:54, time (data): 0.444 (0.001)] l_pix: 1.4067e-02 
+2025-01-25 14:31:56,470 INFO: [Retin..][epoch:1270, iter: 150,000, lr:(1.000e-06,)] [eta: 0:00:00, time (data): 0.444 (0.002)] l_pix: 1.5967e-02 
+2025-01-25 14:31:56,471 INFO: Saving models and training states.
+2025-01-25 14:32:19,877 INFO: Validation ValSet,		 # psnr: 33.7066
+150000,33.70657920534339
+2025-01-25 14:32:19,880 INFO: End of training. Time consumed: 17:30:06
+2025-01-25 14:32:19,880 INFO: Save the latest model.
+2025-01-25 14:32:43,173 INFO: Validation ValSet,		 # psnr: 33.6900

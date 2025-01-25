@@ -15,3 +15,8 @@ gpu_count=$((gpu_count + 1))
 
 # pytorch2.x
 CUDA_VISIBLE_DEVICES=$gpu_ids torchrun --nproc_per_node=$gpu_count --master_port=$master_port basicsr/train.py --opt $config --launcher pytorch
+
+
+CUDA_VISIBLE_DEVICES=0 nohup python3 basicsr/train.py --opt Options/RetinexMamba_LOL_kc.yml > log_kc.txt 2>&1 &
+
+CUDA_VISIBLE_DEVICES=1 nohup python3 basicsr/train.py --opt Options/RetinexMamba_LOL_rle.yml > log_rle.txt 2>&1 &
